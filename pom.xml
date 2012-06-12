@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.impetus.kundera.web</groupId>
-	<artifactId>kundera-webtest</artifactId>
+	<artifactId>Kundera-Web-Examples</artifactId>
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
 	<name>kundera-webtest Maven Webapp</name>
@@ -40,7 +40,7 @@
 	</dependencies>
 	
 	<build>
-	<finalName>kundera-webtest</finalName>
+	<finalName>Kundera-Web-Examples</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
