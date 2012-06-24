@@ -1,30 +1,29 @@
 package com.impetus.kundera.webtest.dao;
 
-import java.util.List;
+import java.io.InputStream;
 
-import javax.ws.rs.core.MediaType;
-
+import com.impetus.kundera.rest.common.JAXBUtils;
+import com.impetus.kundera.rest.dto.SchemaMetadata;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-
-import dto.SchemaDTO;
 
 public class HomeDAO
 {
     
-    public List<SchemaDTO> getSchemaDTOList(WebResource wr, String pu) {
-        System.out.println("\n\nGetting Schema List for PU :" + pu);
-        WebResource.Builder slBuilder = wr.path("kundera/api/metadata/schemaList/" + pu)
-                .accept(MediaType.TEXT_PLAIN);
-        String slResponse = slBuilder.get(ClientResponse.class).toString();
-        String schemaList = slBuilder.get(String.class);
-        System.out.println("Response: " + slResponse);
-        System.out.println("Schema List:" + schemaList);
+    public SchemaMetadata getSchemaMetadata(WebResource wr, String pu, String mediaType) {
+        System.out.println("\n\nGetting Schema Metadata for PUs :" + pu);
+        WebResource.Builder slBuilder = wr.path("rest").path("kundera/api/metadata/schemaList/" + pu)
+                .accept(mediaType);
         
-        SchemaDTO schemaDTO = new SchemaDTO();
-        schemaDTO.setSchemaName(schemaList);
+        ClientResponse schemaResponse = (ClientResponse)slBuilder.get(ClientResponse.class);
         
-        return null;
+        InputStream is = schemaResponse.getEntityInputStream();
+        //String schemaList = StreamUtils.toString(is);  
+        
+        //System.out.println("Schema List:" + schemaList);
+        
+        SchemaMetadata sm = (SchemaMetadata)JAXBUtils.toObject(is, SchemaMetadata.class, mediaType);        
+        return sm;
     }
 
 }

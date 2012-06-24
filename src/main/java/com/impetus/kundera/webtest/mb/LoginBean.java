@@ -22,8 +22,10 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.impetus.kundera.rest.dto.SchemaMetadata;
 import com.impetus.kundera.webtest.common.Constants;
 import com.impetus.kundera.webtest.common.Utilities;
+import com.impetus.kundera.webtest.dao.HomeDAO;
 import com.impetus.kundera.webtest.dao.LoginDAO;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -122,7 +124,15 @@ public class LoginBean
             String at = new LoginDAO().getApplicationToken(wr, getPersistenceUnits());    
             session.setAttribute(Constants.APPLICATION_TOKEN, at);
             session.setAttribute(Constants.PERSISTENCE_UNIT, getPersistenceUnits());
-            session.setAttribute(Constants.PERSISTENCE_UNIT, wr);
+            session.setAttribute(Constants.WEB_RESOURCE, wr);
+            
+            SchemaMetadata schemaMetadata = (SchemaMetadata)session.getAttribute(Constants.SCHEMA_META_DATA);
+            if(schemaMetadata == null) {
+                
+                schemaMetadata = new HomeDAO().getSchemaMetadata(wr, getPersistenceUnits(), MediaType.APPLICATION_XML);
+                session.setAttribute(Constants.SCHEMA_META_DATA, schemaMetadata);
+            }   
+            
             
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Application Token: " + at));            
             

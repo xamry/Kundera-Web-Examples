@@ -15,16 +15,6 @@
  */
 package com.impetus.kundera.webtest.mb;
 
-import java.util.List;
-
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpSession;
-
-import com.impetus.kundera.webtest.common.Constants;
-import com.impetus.kundera.webtest.dao.HomeDAO;
-import com.sun.jersey.api.client.WebResource;
-
-import dto.SchemaDTO;
 
 /**
  * <Prove description of functionality provided by this Type> 
@@ -33,28 +23,12 @@ import dto.SchemaDTO;
 public class HomeBean
 {
     
-    private List<SchemaDTO> schemaDTOList;
-
-    /**
-     * @return the schemaDTOList
-     */
-    public List<SchemaDTO> getSchemaDTOList()
-    {
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+    public String showTableDetails() {
         
-        String pu = (String) session.getAttribute(Constants.PERSISTENCE_UNIT);
-        WebResource wr = (WebResource) session.getAttribute(Constants.WEB_RESOURCE);
-        schemaDTOList = new HomeDAO().getSchemaDTOList(wr, pu);
+        return "showTableDetails";
         
-        return schemaDTOList;
     }
 
-    /**
-     * @param schemaDTOList the schemaDTOList to set
-     */
-    public void setSchemaDTOList(List<SchemaDTO> schemaDTOList)
-    {
-        this.schemaDTOList = schemaDTOList;
-    }   
-
+    
+    
 }

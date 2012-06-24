@@ -20,8 +20,20 @@
 					<td align="left" valign="top" width="30%">
 						<ui:include src="../common/schemaList.xhtml" />
 					</td>
+					
 					<td align="center" width="70%" valign="top">
-						<ui:insert name="body">Default content</ui:insert>
+						<table width="100%">
+							<tr>
+								<td align="center">
+									<ui:insert name="upperBody">Default content</ui:insert>		
+								</td>
+							</tr>
+							<tr>
+								<td align="center">
+									<ui:insert name="lowerBody">Default content</ui:insert>		
+								</td>
+							</tr>						
+						</table>				
 					</td>
 				</tr>
 				</table>				

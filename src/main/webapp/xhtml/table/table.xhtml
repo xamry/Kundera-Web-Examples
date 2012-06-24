@@ -1,5 +1,5 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	template="homeTemplate.xhtml" xmlns:h="http://java.sun.com/jsf/html"
+	template="tableTemplate.xhtml" xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:a4j="http://richfaces.org/a4j"
@@ -8,16 +8,31 @@
 	<ui:define name="title">
         Impetus - NoSQL Browser
     </ui:define>
+
 	
-	<!-- Body -->
-	<ui:define name="body">
+	<!-- Upper Body -->
+	<ui:define name="upperBody">
 		<rich:panel>
 			<f:facet name="header">
-				<h:outputText value="View Records/ Execute operations" />
+				<h:outputText value="Operations" />
 			</f:facet>
         Click on a table name to view records
     </rich:panel>
 	</ui:define>
+	
+	
+	<!-- Lower Body -->
+	<ui:define name="lowerBody">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText value="All table records" />
+			</f:facet>
+        Click on a table name to view records
+    </rich:panel>
+	</ui:define>
+	
+	
+	
 </ui:composition>
 
 

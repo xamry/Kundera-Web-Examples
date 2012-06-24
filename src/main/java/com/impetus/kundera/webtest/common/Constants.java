@@ -27,6 +27,7 @@ public class Constants
     public static final String SESSION_TOKEN = "SESSION_TOKEN";
     public static final String PERSISTENCE_UNIT = "PERSISTENCE_UNIT";
     public static final String WEB_RESOURCE = "WEB_RESOURCE";
+    public static final String SCHEMA_META_DATA = "SCHEMA_META_DATA";
     
     public static final String OUTCOME_LOGIN_FAILED = "loginFailed";
     public static final String OUTCOME_LOGIN_SUCCESSFUL = "loginSuccessful";

@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<rich:panel>
+		<f:facet name="header">
+			<h:outputText value="Browse Schema" />
+		</f:facet>
+		<h:form>
+		<rich:dataTable width="700" var="schema"
+			value="#{sessionScope.schemaMetadata.schemaList}"
+			style="border-color:#ffffff;">
+			<rich:column colspan="5" style="border-color:#ffffff;">
+				<h:outputText value="#{schema.schemaName}" style="font-weight:bold;" />
+				<rich:dataTable width="300" var="table" value="#{schema.tables}"
+					style="border-color:#ffffff;">
+					<rich:column colspan="5" style="border-color:#ffffff;">
+						<h:outputText value="---  " />
+						<h:commandLink action="#{homeBean.showTableDetails}">
+                    		<h:outputText value="#{table.tableName}" />
+                		</h:commandLink>						
+					</rich:column>
+				</rich:dataTable>
+
+			</rich:column>
+		</rich:dataTable>
+		</h:form>
+	</rich:panel>
+</ui:composition>
