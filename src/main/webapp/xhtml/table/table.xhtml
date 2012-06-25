@@ -16,8 +16,23 @@
 			<f:facet name="header">
 				<h:outputText value="Operations" />
 			</f:facet>
-        Click on a table name to view records
-    </rich:panel>
+        <h3><h:outputText value="Insert records into #{homeBean.tableName}" /></h3>
+		<h:form>
+		<table width="100%">
+			<ui:repeat var="key" value="#{homeBean.records[0].keys}" varStatus="status4">
+				<tr>
+					<td style="align: left;"><h:outputText value="#{key}: " style="font-weight:bold;" />
+					</td>
+					<td style="align: left;"><h:inputText width="50" />
+					</td>
+				</tr>
+			</ui:repeat>
+			<tr>
+				<td colspan="2"><h:commandButton value="Submit" align="right"/></td>
+			</tr>
+		</table>
+		</h:form>
+		</rich:panel>
 	</ui:define>
 	
 	
@@ -27,7 +42,7 @@
 			<f:facet name="header">
 				<h:outputText value="All table records" />
 			</f:facet>
-        	<h:outputText value="#{homeBean.tableName}" />
+        	<h3><h:outputText value="Table: #{homeBean.tableName}" /></h3>
         
         <table border="1" width="100%">
         		<tr>
