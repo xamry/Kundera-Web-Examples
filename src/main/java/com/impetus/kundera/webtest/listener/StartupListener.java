@@ -17,12 +17,9 @@ package com.impetus.kundera.webtest.listener;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.ws.rs.core.MediaType;
 
-import com.impetus.kundera.webtest.common.Constants;
 import com.impetus.kundera.webtest.common.Utilities;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
+import com.impetus.kundera.webtest.entities.Book;
 
 /**
  * <Prove description of functionality provided by this Type>
@@ -33,7 +30,7 @@ public class StartupListener implements ServletContextListener
 {
     public void contextInitialized(ServletContextEvent context)
     {
-           
+         Utilities.clazzMap.put(Book.class.getSimpleName(), Book.class);  
 
     }
 

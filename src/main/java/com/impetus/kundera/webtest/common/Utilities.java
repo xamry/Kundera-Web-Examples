@@ -15,10 +15,17 @@
  */
 package com.impetus.kundera.webtest.common;
 
+import java.lang.reflect.Field;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.ws.rs.core.UriBuilder;
 
+import com.impetus.kundera.property.PropertyAccessException;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
@@ -31,6 +38,8 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 public class Utilities
 {
     
+    public static Map<String, Class<?>> clazzMap = new HashMap<String, Class<?>>();
+    
     public static WebResource getWebResource(String url) {
         ClientConfig config = new DefaultClientConfig();
         Client client = Client.create(config);
@@ -38,6 +47,38 @@ public class Utilities
         URI uri = UriBuilder.fromUri(url).build();
         WebResource webResource = client.resource(uri);   
         return webResource;
+    }
+    
+    public static String getFieldValue(Field field, Object o) {
+        if (!field.isAccessible())
+        {
+            field.setAccessible(true);
+        }
+
+        try
+        {
+            return field.get(o).toString();
+        }
+        catch (IllegalArgumentException iarg)
+        {
+            throw new PropertyAccessException(iarg);
+        }
+        catch (IllegalAccessException iacc)
+        {
+            throw new PropertyAccessException(iacc);
+        }
+    }
+    
+    /**
+     * @return
+     */
+    public static List<String> getList(Set<String> s)
+    {
+        List l = new ArrayList<String>();
+        for(String key : s) {
+            l.add(key);
+        }
+        return l;
     }
 
 }

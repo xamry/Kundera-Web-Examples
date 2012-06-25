@@ -30,7 +30,7 @@ public class LoginDAO
     public String getApplicationToken(WebResource webResource, String pu)
     {
         System.out.println("\n\nGetting Application Token...");
-        WebResource.Builder atBuilder = webResource.path("rest").path("kundera/api/application/pu/" + pu)
+        WebResource.Builder atBuilder = webResource.path("rest").path("kundera/api/application/" + pu)
                 .accept(MediaType.TEXT_PLAIN);
         String atResponse = atBuilder.get(ClientResponse.class).toString();
         String applicationToken = atBuilder.get(String.class);

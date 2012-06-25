@@ -27,7 +27,23 @@
 			<f:facet name="header">
 				<h:outputText value="All table records" />
 			</f:facet>
-        Click on a table name to view records
+        	<h:outputText value="#{homeBean.tableName}" />
+        
+        <table border="1" width="100%">
+        		<tr>
+        			<ui:repeat var="key" value="#{homeBean.records[0].keys}" varStatus="status3">
+        				<td style="align:center"><h:outputText value="#{key}" style="font-weight:bold;"/></td>
+        			</ui:repeat>        		
+        		</tr>
+        	<ui:repeat var="record" value="#{homeBean.records}" varStatus="status">
+        		<tr>
+        			<ui:repeat var="key" value="#{record.keys}" varStatus="status2">
+        				<td style="align:center"><h:outputText value="#{record.recordMap[key]}"/></td>
+        			</ui:repeat>        		
+        		</tr>        	
+        	</ui:repeat>        
+        </table>       
+        
     </rich:panel>
 	</ui:define>
 	

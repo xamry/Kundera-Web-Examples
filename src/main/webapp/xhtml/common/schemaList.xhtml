@@ -11,7 +11,7 @@
 		</f:facet>
 		<h:form>
 		<rich:dataTable width="700" var="schema"
-			value="#{sessionScope.schemaMetadata.schemaList}"
+			value="#{sessionScope.SCHEMA_META_DATA.schemaList}"
 			style="border-color:#ffffff;">
 			<rich:column colspan="5" style="border-color:#ffffff;">
 				<h:outputText value="#{schema.schemaName}" style="font-weight:bold;" />
@@ -20,6 +20,8 @@
 					<rich:column colspan="5" style="border-color:#ffffff;">
 						<h:outputText value="---  " />
 						<h:commandLink action="#{homeBean.showTableDetails}">
+							<f:param name="entityClass" value="#{table.entityClassName}" />
+							<f:param name="table" value="#{table.tableName}" />
                     		<h:outputText value="#{table.tableName}" />
                 		</h:commandLink>						
 					</rich:column>
