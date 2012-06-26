@@ -20,6 +20,7 @@ import javax.servlet.ServletContextListener;
 
 import com.impetus.kundera.webtest.common.Utilities;
 import com.impetus.kundera.webtest.entities.Book;
+import com.impetus.kundera.webtest.entities.Song;
 
 /**
  * <Prove description of functionality provided by this Type>
@@ -30,15 +31,14 @@ public class StartupListener implements ServletContextListener
 {
     public void contextInitialized(ServletContextEvent context)
     {
-         Utilities.clazzMap.put(Book.class.getSimpleName(), Book.class);  
+         Utilities.clazzMap.put(Book.class.getSimpleName(), Book.class);
+         Utilities.clazzMap.put(Song.class.getSimpleName(), Song.class);
 
     }
 
     public void contextDestroyed(ServletContextEvent context)
     {
         // Nothing to do as of now
-    }
-    
-    
+    }    
 
 }

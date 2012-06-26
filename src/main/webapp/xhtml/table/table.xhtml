@@ -23,12 +23,17 @@
 				<tr>
 					<td style="align: left;"><h:outputText value="#{key}: " style="font-weight:bold;" />
 					</td>
-					<td style="align: left;"><h:inputText width="50" />
+					<td style="align: left;"><h:inputText name="#{sessionScope.currentRecord[key]}" value="#{sessionScope.currentRecord[key]}" width="50" />
 					</td>
 				</tr>
 			</ui:repeat>
 			<tr>
-				<td colspan="2"><h:commandButton value="Submit" align="right"/></td>
+				<td colspan="2">
+					<h:commandButton value="Submit" align="right" action="#{homeBean.insertRecord}">
+						<f:param name="entityClass" value="#{homeBean.entityClassName}" />
+						<f:param name="table" value="#{homeBean.tableName}" />
+					</h:commandButton>				
+				</td>
 			</tr>
 		</table>
 		</h:form>
@@ -44,26 +49,37 @@
 			</f:facet>
         	<h3><h:outputText value="Table: #{homeBean.tableName}" /></h3>
         
+        <h:form>
         <table border="1" width="100%">
         		<tr>
         			<ui:repeat var="key" value="#{homeBean.records[0].keys}" varStatus="status3">
-        				<td style="align:center"><h:outputText value="#{key}" style="font-weight:bold;"/></td>
+        				<td style="align:center"><h:outputText value="#{key}" style="font-weight:bold;"/></td>        				
         			</ui:repeat>        		
+        			<td style="align:center"><h:outputText value="Actions" style="font-weight:bold;"/></td>
         		</tr>
         	<ui:repeat var="record" value="#{homeBean.records}" varStatus="status">
         		<tr>
         			<ui:repeat var="key" value="#{record.keys}" varStatus="status2">
         				<td style="align:center"><h:outputText value="#{record.recordMap[key]}"/></td>
-        			</ui:repeat>        		
+        			</ui:repeat>  
+        			<td style="align:center">
+        				 <h:commandLink action="#{homeBean.deleteRecord}">
+							<h:graphicImage value="../../images/cross.gif" height="16" width="16" id="delete"/>
+							<f:param name="entityClass" value="#{table.entityClassName}" />
+							<f:param name="table" value="#{table.tableName}" />
+							<f:param name="primaryKey" value="#{record.primaryKey}" />                    		
+                		</h:commandLink>           		   				                                    
+        			
+        			
+        			</td>      		
         		</tr>        	
         	</ui:repeat>        
         </table>       
-        
+        </h:form>
     </rich:panel>
 	</ui:define>
 	
 	
 	
 </ui:composition>
-
 

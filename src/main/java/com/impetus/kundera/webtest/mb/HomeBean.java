@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
+import javax.persistence.Id;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.MediaType;
@@ -42,12 +43,49 @@ import com.sun.jersey.api.client.WebResource;
  * @author amresh.singh
  */
 public class HomeBean
-{    
-    
-    
+{      
     List<Record> records;
     
+    //Map<String, String>  currentRecord;
+    
     String tableName;
+    
+    String entityClassName;
+    
+    
+    public String deleteRecord() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpServletRequest myRequest = (HttpServletRequest)context.getExternalContext().getRequest();
+        HttpSession mySession = myRequest.getSession(); 
+        String entityClassName = myRequest.getParameter("entityClass");
+        String tableName = myRequest.getParameter("table");
+        String primaryKey = myRequest.getParameter("primaryKey");        
+        WebResource webResource = (WebResource)mySession.getAttribute(Constants.WEB_RESOURCE);
+        
+        String applicationToken = (String) mySession.getAttribute(Constants.APPLICATION_TOKEN);
+        WebResource.Builder stBuilder = webResource.path("rest").path("kundera/api/session").accept(MediaType.TEXT_PLAIN)
+        .header(com.impetus.kundera.rest.common.Constants.APPLICATION_TOKEN_HEADER_NAME, applicationToken);
+
+        String sessionToken = stBuilder.get(String.class);
+        
+        WebResource.Builder deleteBuilder = webResource.path("rest").path("kundera/api/crud/" + entityClassName + "/delete/" + primaryKey)
+                .accept(MediaType.TEXT_PLAIN).header(com.impetus.kundera.rest.common.Constants.SESSION_TOKEN_HEADER_NAME, sessionToken);
+        ClientResponse deleteResponse = (ClientResponse) deleteBuilder.delete(ClientResponse.class);
+        
+        return showTableDetails();
+    }
+    
+    public String insertRecord() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpServletRequest myRequest = (HttpServletRequest)context.getExternalContext().getRequest();
+        HttpSession mySession = myRequest.getSession(); 
+        String entityClassName = myRequest.getParameter("entityClass");
+        String tableName = myRequest.getParameter("table");
+        
+        Map<String, String> currentRecord = (Map<String, String>)mySession.getAttribute("currentRecord");
+        
+        return showTableDetails();
+    }
     
     public String showTableDetails() {
         
@@ -56,7 +94,9 @@ public class HomeBean
         HttpSession mySession = myRequest.getSession(); 
         String entityClassName = myRequest.getParameter("entityClass");
         String tableName = myRequest.getParameter("table");
+        
         setTableName(tableName);
+        setEntityClassName(entityClassName);
         
         WebResource webResource = (WebResource)mySession.getAttribute(Constants.WEB_RESOURCE);
         String applicationToken = (String) mySession.getAttribute(Constants.APPLICATION_TOKEN);
@@ -76,21 +116,34 @@ public class HomeBean
         Class entityClass = Utilities.clazzMap.get(entityClassName);
         Collection c = CollectionConverter.toCollection(allBookStr, ArrayList.class, entityClass, MediaType.APPLICATION_XML);
         
+        
+        Map<String, String> currentRecord = new HashMap<String, String>();
         for(Object o : c) {
             Map<String, String> recordMap = new HashMap<String, String>();
+            String pk = "";
             for (Field field : entityClass.getDeclaredFields()) {
                 String fieldName = field.getName();
                 String fieldValue = Utilities.getFieldValue(field, o);
                 
+                if(field.getAnnotation(Id.class) != null) {
+                    pk = fieldValue;
+                }
                 recordMap.put(fieldName, fieldValue);                 
                 
+                currentRecord.put(fieldName, fieldName + "-AAA");
             }
             
             Record record = new Record();
             record.setRecordMap(recordMap);
             record.setKeys(Utilities.getList(recordMap.keySet()));
+            record.setPrimaryKey(pk);            
+            
             getRecords().add(record);
-        }
+        }     
+        
+        mySession.setAttribute("currentRecord", currentRecord);
+        
+        String response = stBuilder.delete(String.class);
         return "showTableDetails";        
     }   
     
@@ -108,6 +161,23 @@ public class HomeBean
     public void setTableName(String tableName)
     {
         this.tableName = tableName;
+    }   
+    
+
+    /**
+     * @return the entityClassName
+     */
+    public String getEntityClassName()
+    {
+        return entityClassName;
+    }
+
+    /**
+     * @param entityClassName the entityClassName to set
+     */
+    public void setEntityClassName(String entityClassName)
+    {
+        this.entityClassName = entityClassName;
     }
 
     /**
@@ -127,6 +197,27 @@ public class HomeBean
     public void setRecords(List<Record> records)
     {
         this.records = records;
-    }   
+    }
+
+   /* *//**
+     * @return the currentRecord
+     *//*
+    public Map<String, String> getCurrentRecord()
+    {
+        if(currentRecord == null) {
+            currentRecord = new HashMap<String, String>();
+        }
+        return currentRecord;
+    }
+
+    *//**
+     * @param currentRecord the currentRecord to set
+     *//*
+    public void setCurrentRecord(Map<String, String> currentRecord)
+    {
+        this.currentRecord = currentRecord;
+    }  
+    */
+    
     
 }

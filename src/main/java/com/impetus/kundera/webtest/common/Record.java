@@ -27,6 +27,8 @@ import java.util.Set;
  */
 public class Record
 {
+    private String primaryKey;
+    
     private List<String> keys;
     
     private Map<String, String> recordMap;   
@@ -65,6 +67,24 @@ public class Record
     public void setRecordMap(Map<String, String> recordMap)
     {
         this.recordMap = recordMap;
-    }   
+    }
+
+
+    /**
+     * @return the primaryKey
+     */
+    public String getPrimaryKey()
+    {
+        return primaryKey;
+    }
+
+
+    /**
+     * @param primaryKey the primaryKey to set
+     */
+    public void setPrimaryKey(String primaryKey)
+    {
+        this.primaryKey = primaryKey;
+    }    
 
 }
