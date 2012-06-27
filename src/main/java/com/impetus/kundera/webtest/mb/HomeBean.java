@@ -26,6 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.impetus.kundera.webtest.common.Constants;
 import com.impetus.kundera.webtest.common.Record;
 import com.impetus.kundera.webtest.dao.QueryDAO;
@@ -51,11 +53,18 @@ public class HomeBean
     
     String entityClassName;
     
-    String jpaQuery;  
+    String jpaQuery;
     
+    String primaryKey;
     
-    Book book;
-    Song song;
+    String bookIsbn;
+    String bookAuthor;
+    String bookPublication;
+    
+    String songId;
+    String songTitle;
+    String songArtist;
+    String songAlbum; 
     
     
     public String deleteRecord() {
@@ -64,7 +73,7 @@ public class HomeBean
         HttpSession mySession = myRequest.getSession(); 
         String entityClassName = myRequest.getParameter("entityClass");
         String tableName = myRequest.getParameter("table");
-        String primaryKey = myRequest.getParameter("primaryKey");        
+        String primaryKey = getPrimaryKey();        
         WebResource webResource = (WebResource)mySession.getAttribute(Constants.WEB_RESOURCE);
         
         String applicationToken = (String) mySession.getAttribute(Constants.APPLICATION_TOKEN);
@@ -77,7 +86,7 @@ public class HomeBean
                 .accept(MediaType.TEXT_PLAIN).header(com.impetus.kundera.rest.common.Constants.SESSION_TOKEN_HEADER_NAME, sessionToken);
         ClientResponse deleteResponse = (ClientResponse) deleteBuilder.delete(ClientResponse.class);
         
-        return showTableDetails();
+        return "showTableDetails";
     }
     
     public String insertRecord() {
@@ -89,7 +98,7 @@ public class HomeBean
         
         Map<String, String> currentRecord = (Map<String, String>)mySession.getAttribute("currentRecord");
         
-        return showTableDetails();
+        return "showTableDetails";
     }
     
     public String runJPAQuery() {    
@@ -103,6 +112,30 @@ public class HomeBean
         new SessionDAO().closeSession(sessionToken);
         
         return "showTableDetails";
+    }
+    
+    public String findById() {        
+        
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpServletRequest myRequest = (HttpServletRequest)context.getExternalContext().getRequest();
+        String entityClassName = myRequest.getParameter("entityClass");
+        String tableName = myRequest.getParameter("table");   
+        
+        String primaryKey = getPrimaryKey();
+        
+        if(!StringUtils.isBlank(primaryKey)) {
+            primaryKey = primaryKey.trim();
+        } else {
+            return "showTableDetails";   
+        }
+        
+        String sessionToken = new SessionDAO().getSessionToken();
+        
+        getRecords().add(new QueryDAO().getRecordForId(entityClassName, sessionToken, primaryKey));
+            
+        new SessionDAO().closeSession(sessionToken);
+        
+        return "showTableDetails";    
     }
     
     public String showTableDetails() {
@@ -195,38 +228,134 @@ public class HomeBean
     {
         this.jpaQuery = jpaQuery;
     }
-
+    
     /**
-     * @return the book
+     * @return the primaryKey
      */
-    public Book getBook()
+    public String getPrimaryKey()
     {
-        return book;
+        return primaryKey;
     }
 
     /**
-     * @param book the book to set
+     * @param primaryKey the primaryKey to set
      */
-    public void setBook(Book book)
+    public void setPrimaryKey(String primaryKey)
     {
-        this.book = book;
+        this.primaryKey = primaryKey;
     }
 
     /**
-     * @return the song
+     * @return the bookIsbn
      */
-    public Song getSong()
+    public String getBookIsbn()
     {
-        return song;
+        return bookIsbn;
     }
 
     /**
-     * @param song the song to set
+     * @param bookIsbn the bookIsbn to set
      */
-    public void setSong(Song song)
+    public void setBookIsbn(String bookIsbn)
     {
-        this.song = song;
-    }    
+        this.bookIsbn = bookIsbn;
+    }
+
+    /**
+     * @return the bookAuthor
+     */
+    public String getBookAuthor()
+    {
+        return bookAuthor;
+    }
+
+    /**
+     * @param bookAuthor the bookAuthor to set
+     */
+    public void setBookAuthor(String bookAuthor)
+    {
+        this.bookAuthor = bookAuthor;
+    }
+
+    /**
+     * @return the bookPublication
+     */
+    public String getBookPublication()
+    {
+        return bookPublication;
+    }
+
+    /**
+     * @param bookPublication the bookPublication to set
+     */
+    public void setBookPublication(String bookPublication)
+    {
+        this.bookPublication = bookPublication;
+    }
+
+    /**
+     * @return the songId
+     */
+    public String getSongId()
+    {
+        return songId;
+    }
+
+    /**
+     * @param songId the songId to set
+     */
+    public void setSongId(String songId)
+    {
+        this.songId = songId;
+    }
+
+    /**
+     * @return the songTitle
+     */
+    public String getSongTitle()
+    {
+        return songTitle;
+    }
+
+    /**
+     * @param songTitle the songTitle to set
+     */
+    public void setSongTitle(String songTitle)
+    {
+        this.songTitle = songTitle;
+    }
+
+    /**
+     * @return the songArtist
+     */
+    public String getSongArtist()
+    {
+        return songArtist;
+    }
+
+    /**
+     * @param songArtist the songArtist to set
+     */
+    public void setSongArtist(String songArtist)
+    {
+        this.songArtist = songArtist;
+    }
+
+    /**
+     * @return the songAlbum
+     */
+    public String getSongAlbum()
+    {
+        return songAlbum;
+    }
+
+    /**
+     * @param songAlbum the songAlbum to set
+     */
+    public void setSongAlbum(String songAlbum)
+    {
+        this.songAlbum = songAlbum;
+    }   
     
 
    /* *//**
@@ -248,6 +377,8 @@ public class HomeBean
         this.currentRecord = currentRecord;
     }  
     */
+    
+    
     
     
     

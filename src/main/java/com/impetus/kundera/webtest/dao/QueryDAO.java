@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.MediaType;
 
+import com.impetus.kundera.rest.common.JAXBUtils;
 import com.impetus.kundera.rest.common.StreamUtils;
 import com.impetus.kundera.rest.converters.CollectionConverter;
 import com.impetus.kundera.webtest.common.Constants;
@@ -43,6 +44,38 @@ import com.sun.jersey.api.client.WebResource;
  */
 public class QueryDAO
 {
+    public Record getRecordForId(String entityClassName, String sessionToken, String primaryKey) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpServletRequest myRequest = (HttpServletRequest)context.getExternalContext().getRequest();
+        HttpSession mySession = myRequest.getSession(); 
+        
+        WebResource webResource = (WebResource) mySession.getAttribute(Constants.WEB_RESOURCE);
+        
+        WebResource.Builder findBuilder = webResource.path("rest").path("kundera/api/crud/" + entityClassName + "/" + primaryKey).accept(MediaType.APPLICATION_XML)
+                .header(com.impetus.kundera.rest.common.Constants.SESSION_TOKEN_HEADER_NAME, sessionToken);       
+
+        ClientResponse findResponse = (ClientResponse) findBuilder.get(ClientResponse.class);
+
+        InputStream is = findResponse.getEntityInputStream();         
+        
+        Class entityClass = Utilities.clazzMap.get(entityClassName);
+        Collection c = new ArrayList();
+        
+        Object record = JAXBUtils.toObject(is, entityClass, MediaType.APPLICATION_XML);
+        if(record != null) {
+            c.add(record);
+        }            
+        
+        List<Record> records = populateRecords(entityClass, c);
+        if(records != null && ! records.isEmpty()) {
+            return records.get(0);
+        } else {
+            return new Record();
+        }
+        
+    }
+    
+    
     
     public List<Record> getAllRecords(String entityClassName, String sessionToken) {
         FacesContext context = FacesContext.getCurrentInstance();
