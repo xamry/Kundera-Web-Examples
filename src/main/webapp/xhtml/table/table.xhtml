@@ -4,14 +4,37 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich">
+	<h:outputStylesheet>
+        .tooltip {
+        background-color: #{ richSkin.generalBackgroundColor};
+        border-width:3px;
+        }
+        .tooltip-custom-body {
+        background-color: orange;
+        }
+ 
+        .tooltip-text {
+        width: 350px;
+        height: 80px;
+        cursor: arrow;
+        border-width: 2px;
+        text-align: center;
+        display: table-cell;
+        vertical-align: middle;
+        }
+ 
+        .tooltipData {
+        font-weight: bold;
+        }
+    </h:outputStylesheet>
 
 	<ui:define name="title">
         Impetus - NoSQL Browser
     </ui:define>
 
-	
+
 	<!-- Upper Body -->
-	<ui:define name="upperBody">
+	<!--<ui:define name="upperBody">
 		<rich:panel>
 			<f:facet name="header">
 				<h:outputText value="Operations" />
@@ -38,48 +61,139 @@
 		</table>
 		</h:form>
 		</rich:panel>
-	</ui:define>
-	
-	
+	</ui:define>-->
+
+
 	<!-- Lower Body -->
 	<ui:define name="lowerBody">
 		<rich:panel>
+			<h:form>
+				<f:facet name="header">
+					<h:outputText value="All table records" />
+				</f:facet>
+				<table width="100%">
+					<tr>
+						<td align="left">
+						<h3><h:outputText value="Table: #{homeBean.tableName}" /></h3>
+						</td>
+						<td align="right">
+						<h:commandButton value="Insert Record"
+							style="width:100px;height:30px;">
+							<rich:componentControl target="insertRecord" operation="show" />
+							<f:param name="entityClass" value="#{homeBean.entityClassName}" />
+							<f:param name="table" value="#{homeBean.tableName}" />							
+						</h:commandButton></td>
+					</tr>
+				</table>
+
+
+				<table border="1" width="100%">
+					<tr>
+						<ui:repeat var="key" value="#{homeBean.records[0].keys}"
+							varStatus="status3">
+							<td style="align: center"><h:outputText value="#{key}"
+								style="font-weight:bold;" /></td>
+						</ui:repeat>
+						<td style="align: center; width: 70px;"><h:outputText
+							value="Actions" style="font-weight:bold;" /></td>
+					</tr>
+					<ui:repeat var="record" value="#{homeBean.records}"
+						varStatus="status">
+						<tr>
+							<ui:repeat var="key" value="#{record.keys}" varStatus="status2">
+								<td style="align: center"><h:outputText
+									value="#{record.recordMap[key]}" /></td>
+							</ui:repeat>
+							<td style="align: center"><h:commandLink
+								action="#{homeBean.deleteRecord}">
+								<h:graphicImage value="../../images/cross.gif" height="16"
+									width="16" />
+								<f:param name="entityClass" value="#{table.entityClassName}" />
+								<f:param name="table" value="#{table.tableName}" />
+								<f:param name="primaryKey" value="#{record.primaryKey}" />
+
+							</h:commandLink> 
+							<h:outputText value="&#160;" /> 
+							<h:commandLink
+								action="#{homeBean.deleteRecord}">
+								<h:graphicImage value="../../images/edit.jpg" height="16"
+									width="16">
+									<rich:tooltip id="tt2" styleClass="tooltip" layout="block">
+										<span style="white-space: nowrap">Edit Record</span>
+									</rich:tooltip>
+								</h:graphicImage>
+								<f:param name="entityClass" value="#{table.entityClassName}" />
+								<f:param name="table" value="#{table.tableName}" />
+								<f:param name="primaryKey" value="#{record.primaryKey}" />
+							</h:commandLink></td>
+						</tr>
+					</ui:repeat>
+				</table>
+			</h:form>
+		</rich:panel>
+		
+		<!-- Insert Record Popup -->
+		<h:form>
+		<rich:popupPanel id="insertRecord" modal="true" autosized="true" domElementAttachment="form"
+			resizeable="false" width="700" height="400">
 			<f:facet name="header">
-				<h:outputText value="All table records" />
+				<h:outputText value="Insert Record into #{homeBean.tableName}" />
 			</f:facet>
-        	<h3><h:outputText value="Table: #{homeBean.tableName}" /></h3>
-        
-        <h:form>
-        <table border="1" width="100%">
-        		<tr>
-        			<ui:repeat var="key" value="#{homeBean.records[0].keys}" varStatus="status3">
-        				<td style="align:center"><h:outputText value="#{key}" style="font-weight:bold;"/></td>        				
-        			</ui:repeat>        		
-        			<td style="align:center"><h:outputText value="Actions" style="font-weight:bold;"/></td>
-        		</tr>
-        	<ui:repeat var="record" value="#{homeBean.records}" varStatus="status">
-        		<tr>
-        			<ui:repeat var="key" value="#{record.keys}" varStatus="status2">
-        				<td style="align:center"><h:outputText value="#{record.recordMap[key]}"/></td>
-        			</ui:repeat>  
-        			<td style="align:center">
-        				 <h:commandLink action="#{homeBean.deleteRecord}">
-							<h:graphicImage value="../../images/cross.gif" height="16" width="16" id="delete"/>
-							<f:param name="entityClass" value="#{table.entityClassName}" />
-							<f:param name="table" value="#{table.tableName}" />
-							<f:param name="primaryKey" value="#{record.primaryKey}" />                    		
-                		</h:commandLink>           		   				                                    
-        			
-        			
-        			</td>      		
-        		</tr>        	
-        	</ui:repeat>        
-        </table>       
-        </h:form>
-    </rich:panel>
-	</ui:define>
+			<f:facet name="controls">
+				<h:outputLink value="#"
+					onclick="#{rich:component('insertRecord')}.hide(); return false;">
+                Close
+            </h:outputLink>
+			</f:facet>
+			<p>Insert Record:</p>
+			
+			<rich:panel rendered="#{homeBean.tableName == 'BOOK'}">						
+				<table width="100%">
+					<tr>
+						<td><h:outputText value="ISBN:" /></td>
+						<td><h:inputText value="#{homeBean.book.isbn}" /></td>						
+					</tr>
+					<tr>
+						<td><h:outputText value="Author:" /></td>
+						<td><h:inputText value="#{homeBean.book.author}" /></td>						
+					</tr>
+					<tr>
+						<td><h:outputText value="Publication:" /></td>
+						<td><h:inputText value="#{homeBean.book.publication}" /></td>						
+					</tr>					
+				</table>
 	
+
+			</rich:panel>
+			<rich:panel rendered="#{homeBean.tableName == 'SONG'}">
+					
+				<table width="100%">
+					<tr>
+						<td><h:outputText value="ID:" /></td>
+						<td><h:inputText value="#{homeBean.song.id}" /></td>						
+					</tr>
+					<tr>
+						<td><h:outputText value="TITLE:" /></td>
+						<td><h:inputText value="#{homeBean.song.title}" /></td>						
+					</tr>
+					<tr>
+						<td><h:outputText value="ARTIST:" /></td>
+						<td><h:inputText value="#{homeBean.song.artist}" /></td>						
+					</tr>	
+					<tr>
+						<td><h:outputText value="ALBUM:" /></td>
+						<td><h:inputText value="#{homeBean.song.album}" /></td>						
+					</tr>				
+				</table>		
+			</rich:panel>
+			
+			<h:commandButton value="  Insert  "
+                         action="#{homeBean.insertRecord}" oncomplete="#{rich:component('insertRecord')}.hide(); return false;"
+                         />
+
+		</rich:popupPanel>
+		</h:form>
+	</ui:define>	
 	
 	
 </ui:composition>
-

@@ -14,17 +14,25 @@
 			<td><ui:include src="../common/header.xhtml" /></td>
 		</tr>
 		<tr>
-			<td align="center">			
+			<td align="center">
 			<table width="100%">
 				<tr>
-					<td align="left" valign="top" width="30%">
-						<ui:include src="../common/schemaList.xhtml" />
-					</td>
+					<td align="left" valign="top" width="30%"><ui:include
+						src="../common/schemaList.xhtml" /></td>
 					<td align="center" width="70%" valign="top">
-						<ui:insert name="body">Default content</ui:insert>
+					<table width="100%">
+						<tr>
+							<td align="center"><ui:include
+								src="../common/jpaQuery.xhtml" /></td>
+						</tr>
+						<tr>
+							<td align="center"><ui:insert name="body">Default content</ui:insert>
+							</td>
+						</tr>
+					</table>
 					</td>
 				</tr>
-				</table>				
+			</table>
 			</td>
 		</tr>
 	</table>

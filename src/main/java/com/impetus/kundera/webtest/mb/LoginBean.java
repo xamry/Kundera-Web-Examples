@@ -25,8 +25,10 @@ import org.apache.commons.lang.StringUtils;
 import com.impetus.kundera.rest.dto.SchemaMetadata;
 import com.impetus.kundera.webtest.common.Constants;
 import com.impetus.kundera.webtest.common.Utilities;
+import com.impetus.kundera.webtest.dao.ApplicationDAO;
 import com.impetus.kundera.webtest.dao.HomeDAO;
 import com.impetus.kundera.webtest.dao.LoginDAO;
+import com.impetus.kundera.webtest.dao.MetadataDAO;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
@@ -120,22 +122,20 @@ public class LoginBean
         else
         {
 
-            WebResource wr = Utilities.getWebResource(getWebServiceURL());            
-            String at = new LoginDAO().getApplicationToken(wr, getPersistenceUnits());    
-            session.setAttribute(Constants.APPLICATION_TOKEN, at);
-            session.setAttribute(Constants.PERSISTENCE_UNIT, getPersistenceUnits());
+            WebResource wr = Utilities.getWebResource(getWebServiceURL());   
             session.setAttribute(Constants.WEB_RESOURCE, wr);
             
+            String at = new ApplicationDAO().getApplicationToken(wr, getPersistenceUnits()); 
+            
+            session.setAttribute(Constants.APPLICATION_TOKEN, at);
+            session.setAttribute(Constants.PERSISTENCE_UNIT, getPersistenceUnits());
+            
+            
             SchemaMetadata schemaMetadata = (SchemaMetadata)session.getAttribute(Constants.SCHEMA_META_DATA);
-            if(schemaMetadata == null) {
-                
-                schemaMetadata = new HomeDAO().getSchemaMetadata(wr, getPersistenceUnits(), MediaType.APPLICATION_XML);
+            if(schemaMetadata == null) {                
+                schemaMetadata = new MetadataDAO().getSchemaMetadata(getPersistenceUnits(), MediaType.APPLICATION_XML);
                 session.setAttribute(Constants.SCHEMA_META_DATA, schemaMetadata);
-            }   
-            
-            
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Application Token: " + at));            
-            
+            }          
             outcome = Constants.OUTCOME_LOGIN_SUCCESSFUL;
 
             return outcome;

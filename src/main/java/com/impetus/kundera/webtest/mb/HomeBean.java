@@ -15,25 +15,23 @@
  */
 package com.impetus.kundera.webtest.mb;
 
-import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.persistence.Id;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.MediaType;
 
-import com.impetus.kundera.rest.common.StreamUtils;
-import com.impetus.kundera.rest.converters.CollectionConverter;
 import com.impetus.kundera.webtest.common.Constants;
 import com.impetus.kundera.webtest.common.Record;
-import com.impetus.kundera.webtest.common.Utilities;
+import com.impetus.kundera.webtest.dao.QueryDAO;
+import com.impetus.kundera.webtest.dao.SessionDAO;
+import com.impetus.kundera.webtest.entities.Book;
+import com.impetus.kundera.webtest.entities.Song;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
@@ -42,6 +40,7 @@ import com.sun.jersey.api.client.WebResource;
  * <Prove description of functionality provided by this Type> 
  * @author amresh.singh
  */
+
 public class HomeBean
 {      
     List<Record> records;
@@ -51,6 +50,12 @@ public class HomeBean
     String tableName;
     
     String entityClassName;
+    
+    String jpaQuery;  
+    
+    
+    Book book;
+    Song song;
     
     
     public String deleteRecord() {
@@ -87,63 +92,39 @@ public class HomeBean
         return showTableDetails();
     }
     
+    public String runJPAQuery() {    
+        
+        String jpaQuery = getJpaQuery();
+        
+        String sessionToken = new SessionDAO().getSessionToken();
+        
+        getRecords().addAll(new QueryDAO().getRecordsForQuery(sessionToken, jpaQuery));
+            
+        new SessionDAO().closeSession(sessionToken);
+        
+        return "showTableDetails";
+    }
+    
     public String showTableDetails() {
         
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest myRequest = (HttpServletRequest)context.getExternalContext().getRequest();
-        HttpSession mySession = myRequest.getSession(); 
+        
         String entityClassName = myRequest.getParameter("entityClass");
         String tableName = myRequest.getParameter("table");
         
         setTableName(tableName);
-        setEntityClassName(entityClassName);
+        setEntityClassName(entityClassName);  
         
-        WebResource webResource = (WebResource)mySession.getAttribute(Constants.WEB_RESOURCE);
-        String applicationToken = (String) mySession.getAttribute(Constants.APPLICATION_TOKEN);
+        String sessionToken = new SessionDAO().getSessionToken();
         
-        WebResource.Builder stBuilder = webResource.path("rest").path("kundera/api/session").accept(MediaType.TEXT_PLAIN)
-        .header(com.impetus.kundera.rest.common.Constants.APPLICATION_TOKEN_HEADER_NAME, applicationToken);
-
-        String sessionToken = stBuilder.get(String.class);
-        
-        
-        WebResource.Builder queryBuilder = webResource.path("rest").path("kundera/api/query/" + entityClassName + "/all").accept(MediaType.APPLICATION_XML)
-        .header(com.impetus.kundera.rest.common.Constants.SESSION_TOKEN_HEADER_NAME, sessionToken);
-        ClientResponse queryResponse = (ClientResponse) queryBuilder.get(ClientResponse.class);
-        InputStream is = queryResponse.getEntityInputStream();
-
-        String allBookStr = StreamUtils.toString(is);
-        Class entityClass = Utilities.clazzMap.get(entityClassName);
-        Collection c = CollectionConverter.toCollection(allBookStr, ArrayList.class, entityClass, MediaType.APPLICATION_XML);
-        
-        
-        Map<String, String> currentRecord = new HashMap<String, String>();
-        for(Object o : c) {
-            Map<String, String> recordMap = new HashMap<String, String>();
-            String pk = "";
-            for (Field field : entityClass.getDeclaredFields()) {
-                String fieldName = field.getName();
-                String fieldValue = Utilities.getFieldValue(field, o);
-                
-                if(field.getAnnotation(Id.class) != null) {
-                    pk = fieldValue;
-                }
-                recordMap.put(fieldName, fieldValue);                 
-                
-                currentRecord.put(fieldName, fieldName + "-AAA");
-            }
+        getRecords().addAll(new QueryDAO().getAllRecords(entityClassName, sessionToken));
             
-            Record record = new Record();
-            record.setRecordMap(recordMap);
-            record.setKeys(Utilities.getList(recordMap.keySet()));
-            record.setPrimaryKey(pk);            
-            
-            getRecords().add(record);
-        }     
+        new SessionDAO().closeSession(sessionToken);
         
-        mySession.setAttribute("currentRecord", currentRecord);
+        //mySession.setAttribute("currentRecord", currentRecord);
         
-        String response = stBuilder.delete(String.class);
+        
         return "showTableDetails";        
     }   
     
@@ -199,6 +180,55 @@ public class HomeBean
         this.records = records;
     }
 
+    /**
+     * @return the jpaQuery
+     */
+    public String getJpaQuery()
+    {
+        return jpaQuery;
+    }
+
+    /**
+     * @param jpaQuery the jpaQuery to set
+     */
+    public void setJpaQuery(String jpaQuery)
+    {
+        this.jpaQuery = jpaQuery;
+    }
+
+    /**
+     * @return the book
+     */
+    public Book getBook()
+    {
+        return book;
+    }
+
+    /**
+     * @param book the book to set
+     */
+    public void setBook(Book book)
+    {
+        this.book = book;
+    }
+
+    /**
+     * @return the song
+     */
+    public Song getSong()
+    {
+        return song;
+    }
+
+    /**
+     * @param song the song to set
+     */
+    public void setSong(Song song)
+    {
+        this.song = song;
+    }    
+    
+
    /* *//**
      * @return the currentRecord
      *//*
@@ -218,6 +248,8 @@ public class HomeBean
         this.currentRecord = currentRecord;
     }  
     */
+    
+    
     
     
 }

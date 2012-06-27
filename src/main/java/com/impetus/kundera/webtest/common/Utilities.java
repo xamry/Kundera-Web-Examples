@@ -80,5 +80,27 @@ public class Utilities
         }
         return l;
     }
+    
+    
+    public static void main(String[] args)
+    {
+        String s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><books><book><author>Vivek</author><isbn>2222222222222</isbn><publication>McGraw</publication></book><book><author>Amresh</author><isbn>1111111111111</isbn><publication>Willey</publication></book><books>";
+        
+        System.out.println(getClassName(s));
+        System.out.println(s);
+    }
+    public static String getClassName(String listString) {
+        String input = new String(listString);
+        
+        if(input.startsWith("<?xml")) {
+            input = input.substring(input.indexOf(">") + 1, input.length());
+        }
+        
+        input = input.substring(input.indexOf(">") + 1, input.length());
+        
+        String className = input.substring(1, input.indexOf(">"));
+        className = className.substring(0, 1).toUpperCase() + className.substring(1, className.length());
+        return className;        
+    }
 
 }

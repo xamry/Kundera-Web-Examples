@@ -24,9 +24,17 @@ import com.sun.jersey.api.client.WebResource;
  * <Prove description of functionality provided by this Type> 
  * @author amresh.singh
  */
-public class LoginDAO
+public class ApplicationDAO
 {
-    
-    
-
+    public String getApplicationToken(WebResource webResource, String pu)
+    {
+        System.out.println("\n\nGetting Application Token...");
+        WebResource.Builder atBuilder = webResource.path("rest").path("kundera/api/application/" + pu)
+                .accept(MediaType.TEXT_PLAIN);
+        String atResponse = atBuilder.get(ClientResponse.class).toString();
+        String applicationToken = atBuilder.get(String.class);
+        System.out.println("Response: " + atResponse);
+        System.out.println("Application Token:" + applicationToken);
+        return applicationToken;
+    }
 }
