@@ -12,45 +12,7 @@
 		<welcome-file>default.html</welcome-file>
 		<welcome-file>default.htm</welcome-file>
 		<welcome-file>default.jsp</welcome-file>
-	</welcome-file-list>
-
-	<context-param>
-		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
-		<param-value>server</param-value>
-	</context-param>
-	<context-param>
-		<param-name>javax.faces.CONFIG_FILES</param-name>
-		<param-value>/WEB-INF/faces-config.xml</param-value>
-	</context-param>
-	<context-param>
-		<param-name>org.richfaces.SKIN</param-name>
-		<param-value>blueSky</param-value>
-	</context-param>
-	<context-param>
-		<param-name>org.richfaces.CONTROL_SKINNING</param-name>
-		<param-value>enable</param-value>
-	</context-param>
-
-	<listener>
-		<listener-class>com.sun.faces.config.ConfigureListener</listener-class>
-	</listener>
-	
-	<listener>
-	<listener-class>com.impetus.kundera.webtest.listener.StartupListener</listener-class>
-	</listener>
-
-
-	<!-- Faces Servlet -->
-	<servlet>
-		<servlet-name>Faces Servlet</servlet-name>
-		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>Faces Servlet</servlet-name>
-		<url-pattern>*.jsf</url-pattern>
-	</servlet-mapping>
+	</welcome-file-list>	
 
 	<!-- JAX-RS Servlet -->
 	<servlet>

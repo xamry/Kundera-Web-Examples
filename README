@@ -7,6 +7,13 @@ create column family BOOK with comparator=UTF8Type and default_validation_class=
 create column family SONG with comparator=UTF8Type and default_validation_class=UTF8Type and key_validation_class=UTF8Type;
 describe KunderaExamples;
 
+SET BOOK['1111111111111']['AUTHOR']='Amresh';
+SET BOOK['1111111111111']['PUBLICATION']='Willey';
+SET BOOK['2222222222222']['AUTHOR']='Vivek';
+SET BOOK['2222222222222']['PUBLICATION']='McGraw';
+SET BOOK['3333333333333']['AUTHOR']='Kuldeep';
+SET BOOK['3333333333333']['PUBLICATION']='Oreilly';
+
 SET SONG['1']['TITLE']='Turn the page';
 SET SONG['1']['ARTIST']='METALLICA';
 SET SONG['1']['ALBUM']='Garage Inc.';
@@ -16,6 +23,9 @@ SET SONG['2']['ALBUM']='Back in Black';
 SET SONG['3']['TITLE']='Coming back to life';
 SET SONG['3']['ARTIST']='Pink Floyd';
 SET SONG['3']['ALBUM']='The devision bell';
+SET SONG['4']['TITLE']='Angel';
+SET SONG['4']['ARTIST']='Judas Priest';
+SET SONG['4']['ALBUM']='Angel of Retribution';
 
 
 
