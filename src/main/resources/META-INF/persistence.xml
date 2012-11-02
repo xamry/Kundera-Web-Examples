@@ -5,8 +5,8 @@
 
 	<persistence-unit name="twissandra">
 		<provider>com.impetus.kundera.KunderaPersistence</provider>
-		<class>com.impetus.kundera.webtest.entities.Book</class>
-		<class>com.impetus.kundera.webtest.entities.Song</class>
+<!--		<class>com.impetus.kundera.webtest.entities.Book</class>-->
+<!--		<class>com.impetus.kundera.webtest.entities.Song</class>-->
 		<properties>
 			<property name="kundera.nodes" value="localhost" />
 			<property name="kundera.port" value="9160" />

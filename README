@@ -1,5 +1,6 @@
 Usage
 ==========================================
+drop keyspace KunderaExamples;
 create keyspace KunderaExamples;
 use KunderaExamples;
 drop column family BOOK;

@@ -33,7 +33,7 @@ public class Song
 {
     @Id
     @Column(name="ID")
-    private int id;
+    private String id;
     
     @Column(name="TITLE")
     private String title;
@@ -42,12 +42,13 @@ public class Song
     private String artist;
     
     @Column(name="ALBUM")
-    private String album;
-
+    private String album;      
+    
+    
     /**
      * @return the id
      */
-    public int getId()
+    public String getId()
     {
         return id;
     }
@@ -55,7 +56,7 @@ public class Song
     /**
      * @param id the id to set
      */
-    public void setId(int id)
+    public void setId(String id)
     {
         this.id = id;
     }
